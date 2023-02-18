@@ -1,0 +1,36 @@
+version: '3'
+services:
+  mlflow-server:
+    build: .
+    image: mlflow-tutorial:v0.1
+    container_name: mlflow-server
+    tty: true
+    restart: always
+    ports:
+      - 8000:5000
+    networks:
+      mlflow-net:
+        ipv4_address: 172.30.0.2
+    volumes:
+      - E:\projects\mlflow-tutorial:/app/mlflow-server
+      - E:\server:/server
+  training-server:
+    image: mlflow-tutorial:v0.1
+    container_name: mlflow-training-server
+    tty: true
+    restart: always
+    ports:
+      - 9000:5000
+    networks:
+      mlflow-net:
+        ipv4_address: 172.30.0.3
+    volumes:
+      - E:\projects\mlflow-tutorial:/app/mlflow-tutorial
+      - E:\dataset:/dataset
+networks:
+  mlflow-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24

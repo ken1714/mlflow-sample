@@ -24,3 +24,15 @@ $ docker-compose up -d
  - Container mlflow-training         Started
  - Container mlflow-server           Started
 ```
+
+## 2. Training
+
+Run below command. `--alpha` (default: 0.5) and `--l1_ratio` (default: 0.5) are options.
+
+```bash
+$ python3 train.py --alpha 0.5 --l1_ratio 0.5
+```
+
+## 3. View trained results
+
+Access to http://localhost:8000/ from your host machine.

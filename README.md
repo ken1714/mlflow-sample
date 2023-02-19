@@ -26,11 +26,21 @@ $ docker-compose up -d
 ```
 
 ## 2. Training
+### 2.1 Split training and test data
+
+Run below command to save training and test data to `--output_dir` as csv files. `--output_dir` and `--random_seed` are options. The directory that has the input csv file will be set as `--output_dir` if you does not set `--output_dir`. There is uniform selection for splitting training and test data, but you can set `--random_seed` to get various splitted results.
+
+
+```bash
+python3 split_train_test.py data/winequality-red.csv --output_dir output --random_seed 40
+```
+
+### 2.2 Run training
 
 Run below command. `--alpha` (default: 0.5) and `--l1_ratio` (default: 0.5) are options.
 
 ```bash
-$ python3 train.py --alpha 0.5 --l1_ratio 0.5
+$ python3 train.py train.csv test.csv --alpha 0.5 --l1_ratio 0.5
 ```
 
 ## 3. View trained results

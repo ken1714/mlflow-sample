@@ -8,7 +8,6 @@ import argparse
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import ElasticNet
 from urllib.parse import urlparse
 import mlflow
@@ -31,23 +30,13 @@ def eval_metrics(actual, pred):
     return rmse, mae, r2
 
 
-def main(alpha, l1_ratio):
+def main(train_csv_path, test_csv_path, alpha, l1_ratio):
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
-    # Read the wine-quality csv file from the URL
-    csv_url = (
-        "https://raw.githubusercontent.com/mlflow/mlflow/master/tests/data/winequality-red.csv"
-    )
-    try:
-        data = pd.read_csv(csv_url, sep=";")
-    except Exception as e:
-        logger.exception(
-            "Unable to download training & test CSV, check your internet connection. Error: %s", e
-        )
-
-    # Split the data into training and test sets. (0.75, 0.25) split.
-    train, test = train_test_split(data)
+    # Read the wine-quality csv files
+    train = pd.read_csv(train_csv_path)
+    test  = pd.read_csv(test_csv_path)
 
     # The predicted column is "quality" which is a scalar from [3, 9]
     train_x = train.drop(["quality"], axis=1)
@@ -73,12 +62,12 @@ def main(alpha, l1_ratio):
         mlflow.log_metric("rmse", rmse)
         mlflow.log_metric("r2", r2)
         mlflow.log_metric("mae", mae)
+        mlflow.log_artifact(train_csv_path, artifact_path="train")
+        mlflow.log_artifact(test_csv_path,  artifact_path="test")
 
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
-
         # Model registry does not work with file store
         if tracking_url_type_store != "file":
-
             # Register the model
             # There are other ways to use the Model Registry, which depends on the use case,
             # please refer to the doc for more information:
@@ -90,8 +79,10 @@ def main(alpha, l1_ratio):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Training wine quality and save the results to mlflow tracking.")
+    parser.add_argument("train_csv_path", type=str)
+    parser.add_argument("test_csv_path", type=str)
     parser.add_argument("--alpha", "-a", default=0.5, type=float)
     parser.add_argument("--l1_ratio", "-l", default=0.5, type=float)
 
     args = parser.parse_args()
-    main(args.alpha, args.l1_ratio)
+    main(args.train_csv_path, args.test_csv_path, args.alpha, args.l1_ratio)

@@ -31,20 +31,12 @@ def eval_metrics(actual, pred):
     return rmse, mae, r2
 
 
-def main(alpha, l1_ratio):
+def main(csv_path, alpha, l1_ratio):
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
     # Read the wine-quality csv file from the URL
-    csv_url = (
-        "https://raw.githubusercontent.com/mlflow/mlflow/master/tests/data/winequality-red.csv"
-    )
-    try:
-        data = pd.read_csv(csv_url, sep=";")
-    except Exception as e:
-        logger.exception(
-            "Unable to download training & test CSV, check your internet connection. Error: %s", e
-        )
+    data = pd.read_csv(csv_path)
 
     # Split the data into training and test sets. (0.75, 0.25) split.
     train, test = train_test_split(data)
@@ -90,8 +82,9 @@ def main(alpha, l1_ratio):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Training wine quality and save the results to mlflow tracking.")
+    parser.add_argument("csv_path", type=str)
     parser.add_argument("--alpha", "-a", default=0.5, type=float)
     parser.add_argument("--l1_ratio", "-l", default=0.5, type=float)
 
     args = parser.parse_args()
-    main(args.alpha, args.l1_ratio)
+    main(args.csv_path, args.alpha, args.l1_ratio)

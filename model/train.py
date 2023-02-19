@@ -34,7 +34,7 @@ def main(train_csv_path, test_csv_path, alpha, l1_ratio):
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
-    # Read the wine-quality csv file
+    # Read the wine-quality csv files
     train = pd.read_csv(train_csv_path)
     test  = pd.read_csv(test_csv_path)
 

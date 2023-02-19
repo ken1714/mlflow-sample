@@ -37,10 +37,10 @@ python3 split_train_test.py data/winequality-red.csv --output_dir output --rando
 
 ### 2.2 Run training
 
-Run below command. `--alpha` (default: 0.5) and `--l1_ratio` (default: 0.5) are options.
+Run below command. `--alpha` (default: 0.5), `--l1_ratio` (default: 0.5) and `--exp_name` are options. `--exp_name` is display name for mlflow tracking.
 
 ```bash
-$ python3 train.py train.csv test.csv --alpha 0.5 --l1_ratio 0.5
+$ python3 train.py train.csv test.csv --exp_name experiment_sample --alpha 0.5 --l1_ratio 0.5
 ```
 
 ## 3. View trained results

@@ -2,10 +2,9 @@
 # P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis.
 # Modeling wine preferences by data mining from physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553, 2009.
 
-import os
 import warnings
-import sys
 
+import argparse
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -28,7 +27,7 @@ def eval_metrics(actual, pred):
     return rmse, mae, r2
 
 
-if __name__ == "__main__":
+def main(alpha, l1_ratio):
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
@@ -51,9 +50,6 @@ if __name__ == "__main__":
     test_x = test.drop(["quality"], axis=1)
     train_y = train[["quality"]]
     test_y = test[["quality"]]
-
-    alpha = float(sys.argv[1]) if len(sys.argv) > 1 else 0.5
-    l1_ratio = float(sys.argv[2]) if len(sys.argv) > 2 else 0.5
 
     with mlflow.start_run():
         lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
@@ -86,3 +82,12 @@ if __name__ == "__main__":
             mlflow.sklearn.log_model(lr, "model", registered_model_name="ElasticnetWineModel")
         else:
             mlflow.sklearn.log_model(lr, "model")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Training wine quality and save the results to mlflow tracking.")
+    parser.add_argument("--alpha", "-a", default=0.5, type=float)
+    parser.add_argument("--l1_ratio", "-l", default=0.5, type=float)
+
+    args = parser.parse_args()
+    main(args.alpha, args.l1_ratio)

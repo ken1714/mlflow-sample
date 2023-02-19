@@ -20,6 +20,10 @@ logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
 
+TRACKING_URI= "http://172.30.0.2:5000/"
+mlflow.set_tracking_uri(TRACKING_URI)
+
+
 def eval_metrics(actual, pred):
     rmse = np.sqrt(mean_squared_error(actual, pred))
     mae = mean_absolute_error(actual, pred)

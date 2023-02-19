@@ -8,7 +8,6 @@ import argparse
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import ElasticNet
 from urllib.parse import urlparse
 import mlflow
@@ -31,15 +30,13 @@ def eval_metrics(actual, pred):
     return rmse, mae, r2
 
 
-def main(csv_path, alpha, l1_ratio):
+def main(train_csv_path, test_csv_path, alpha, l1_ratio):
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
-    # Read the wine-quality csv file from the URL
-    data = pd.read_csv(csv_path)
-
-    # Split the data into training and test sets. (0.75, 0.25) split.
-    train, test = train_test_split(data)
+    # Read the wine-quality csv file
+    train = pd.read_csv(train_csv_path)
+    test  = pd.read_csv(test_csv_path)
 
     # The predicted column is "quality" which is a scalar from [3, 9]
     train_x = train.drop(["quality"], axis=1)
@@ -82,9 +79,10 @@ def main(csv_path, alpha, l1_ratio):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Training wine quality and save the results to mlflow tracking.")
-    parser.add_argument("csv_path", type=str)
+    parser.add_argument("train_csv_path", type=str)
+    parser.add_argument("test_csv_path", type=str)
     parser.add_argument("--alpha", "-a", default=0.5, type=float)
     parser.add_argument("--l1_ratio", "-l", default=0.5, type=float)
 
     args = parser.parse_args()
-    main(args.csv_path, args.alpha, args.l1_ratio)
+    main(args.train_csv_path, args.test_csv_path, args.alpha, args.l1_ratio)

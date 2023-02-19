@@ -30,7 +30,7 @@ def eval_metrics(actual, pred):
     return rmse, mae, r2
 
 
-def main(train_csv_path, test_csv_path, alpha, l1_ratio):
+def main(train_csv_path, test_csv_path, experiment_name, alpha, l1_ratio):
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
@@ -44,7 +44,7 @@ def main(train_csv_path, test_csv_path, alpha, l1_ratio):
     train_y = train[["quality"]]
     test_y = test[["quality"]]
 
-    with mlflow.start_run():
+    with mlflow.start_run(run_name=experiment_name):
         lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
         lr.fit(train_x, train_y)
 
@@ -81,8 +81,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Training wine quality and save the results to mlflow tracking.")
     parser.add_argument("train_csv_path", type=str)
     parser.add_argument("test_csv_path", type=str)
+    parser.add_argument("--experiment_name", "-exp", default=None, type=str)
     parser.add_argument("--alpha", "-a", default=0.5, type=float)
     parser.add_argument("--l1_ratio", "-l", default=0.5, type=float)
 
     args = parser.parse_args()
-    main(args.train_csv_path, args.test_csv_path, args.alpha, args.l1_ratio)
+    main(args.train_csv_path, args.test_csv_path, args.experiment_name, args.alpha, args.l1_ratio)

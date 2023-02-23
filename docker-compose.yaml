@@ -27,6 +27,35 @@ services:
     volumes:
       - E:\projects\mlflow-sample\model:/app/mlflow-sample/model
       - E:\dataset:/dataset
+  adminer:
+    image: adminer
+    container_name: mlflow-adminer
+    restart: always
+    depends_on:
+      - database-server
+    ports: 
+      - "8080:8080"
+    networks:
+      mlflow-net:
+        ipv4_address: 172.30.0.4
+  database-server:
+    image: mysql:5.7
+    container_name: ${DB_HOST}
+    platform: 'linux/amd64'
+    restart: always
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: "Asia/Tokyo"
+    ports:
+      - 3306:3306
+    networks:
+      mlflow-net:
+        ipv4_address: 172.30.0.5
+    volumes:
+      - E:\projects\mlflow-sample\database:/var/lib/mysql
 networks:
   mlflow-net:
     driver: bridge

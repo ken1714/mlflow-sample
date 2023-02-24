@@ -56,6 +56,24 @@ services:
         ipv4_address: 172.30.0.5
     volumes:
       - E:\projects\mlflow-sample\database:/var/lib/mysql
+  ftp-server:
+    image: stilliard/pure-ftpd:latest
+    container_name: mlflow-ftp-server
+    restart: always
+    environment:
+      - PUBLICHOST=localhost
+      - FTP_USER=${FTP_USER}
+      - FTP_PASSWORD=${FTP_PASSWORD}
+      - FTP_USER_HOME=/home/ftpusers
+      - ADDED_FLAGS="--tls=2"
+    ports:
+      - 21:21
+      - 30000-30009:30000-30009
+    networks:
+      mlflow-net:
+        ipv4_address: 172.30.0.6
+    volumes:
+      - E:\projects\mlflow-sample\artifacts:/artifacts
 networks:
   mlflow-net:
     driver: bridge

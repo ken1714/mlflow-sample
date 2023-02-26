@@ -6,13 +6,21 @@ services:
     container_name: mlflow-server
     tty: true
     restart: always
+    depends_on:
+      - database-server
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DB_HOST}:3306/${DB_NAME}
+      --default-artifact-root ftp://${FTP_USER}:${FTP_PASSWORD}@172.30.0.6:21/home/ftpusers
     ports:
       - 8000:5000
     networks:
       mlflow-net:
         ipv4_address: 172.30.0.2
     volumes:
-      - E:\projects\mlflow-sample\server:/app/mlflow-sample/server
+      - E:\projects\mlflow-sample\server:/server
   training-server:
     build: .\model\docker
     image: mlflow-training:v0.1
@@ -73,7 +81,7 @@ services:
       mlflow-net:
         ipv4_address: 172.30.0.6
     volumes:
-      - E:\projects\mlflow-sample\artifacts:/artifacts
+      - E:\projects\mlflow-sample\artifacts:/home/ftpusers
 networks:
   mlflow-net:
     driver: bridge

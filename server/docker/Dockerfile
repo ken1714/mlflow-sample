@@ -1,12 +1,25 @@
-FROM python:3.10
+# Builder for installing python packages
+# You need a "buster" image to install mlflow and psycopg2
+FROM python:3.10.10-buster as builder
 
-# Dependencies
-RUN pip3 install mlflow[extras]
+# Install mlflow and psycopg2
+RUN pip3 install --upgrade pip
+RUN pip3 install \
+    mlflow \
+    mysqlclient
 
-# open port 5000
+# Main image (smaller size)
+FROM python:3.10.10-slim-buster
+
+# Copy the essential packages from the docker image "python:x.x.x-*-buster" to the main docker image
+# because the size of the docker image "python:x.x.x-*-buster" is large
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder /usr/local/bin/mlflow /usr/local/bin/mlflow
+COPY --from=builder /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
+COPY --from=builder /lib/x86_64-linux-gnu /lib/x86_64-linux-gnu
+COPY --from=builder /usr/local/bin/gunicorn /usr/local/bin/gunicorn
+
+# Open port 5000
 EXPOSE 5000
 
-# Start mlflow server
-CMD mlflow server \
-    --host 0.0.0.0 \
-    --port 5000
+WORKDIR /server

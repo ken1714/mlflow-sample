@@ -1,5 +1,13 @@
 # mlflow-sample
-## 1. Setup docker containers
+## 1. Overview
+
+I have developed this repository in reference to [MLflow Documentation](https://mlflow.org/docs/latest/index.html), especially MLflow tracking, [Scenario 3: MLflow on localhost with Tracking Server
+](https://mlflow.org/docs/latest/tracking.html#scenario-3-mlflow-on-localhost-with-tracking-server) and [Scenario 4: MLflow with remote Tracking Server, backend and artifact stores
+](https://mlflow.org/docs/latest/tracking.html#scenario-4-mlflow-with-remote-tracking-server-backend-and-artifact-stores).
+
+![overview](images/overview.png)
+
+## 2. Setup docker containers
 
 Move to [docker](docker) directory, and build docker images.
 
@@ -20,13 +28,16 @@ If you have done that, run the docker containers.
 
 ```bash
 $ docker-compose up -d
- - Network mlflow-tutorial_default   Created
- - Container mlflow-training         Started
- - Container mlflow-server           Started
+[+] Running 5/5
+ - Container mlflow-training
+ - Container mlflow-database
+ - Container mlflow-ftp-server
+ - Container mlflow-server
+ - Container mlflow-adminer
 ```
 
-## 2. Training
-### 2.1 Split training and test data
+## 3. Training
+### 3.1 Split training and test data
 
 Run below command to save training and test data to `--output_dir` as csv files. `--output_dir` and `--random_seed` are options. The directory that has the input csv file will be set as `--output_dir` if you does not set `--output_dir`. There is uniform selection for splitting training and test data, but you can set `--random_seed` to get various splitted results.
 
@@ -35,7 +46,7 @@ Run below command to save training and test data to `--output_dir` as csv files.
 python3 split_train_test.py data/winequality-red.csv --output_dir output --random_seed 40
 ```
 
-### 2.2 Run training
+### 3.2 Run training
 
 Run below command. `--alpha` (default: 0.5), `--l1_ratio` (default: 0.5) and `--experiment_name` are options. `--experiment_name` is display name for mlflow tracking.
 
@@ -43,6 +54,6 @@ Run below command. `--alpha` (default: 0.5), `--l1_ratio` (default: 0.5) and `--
 $ python3 train.py train.csv test.csv --experiment_name experiment_sample --alpha 0.5 --l1_ratio 0.5
 ```
 
-## 3. View trained results
+## 4. View trained results
 
 Access to http://localhost:8000/ from your host machine.

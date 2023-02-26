@@ -1,9 +1,9 @@
 # mlflow-sample
 ## 1. Overview
 
-I have developed this repository in reference to [MLflow Documentation](https://mlflow.org/docs/latest/index.html), especially MLflow tracking, [Scenario 3: MLflow on localhost with Tracking Server
+This repository has been developed in reference to [MLflow Documentation](https://mlflow.org/docs/latest/index.html), especially MLflow tracking, [Scenario 3: MLflow on localhost with Tracking Server
 ](https://mlflow.org/docs/latest/tracking.html#scenario-3-mlflow-on-localhost-with-tracking-server) and [Scenario 4: MLflow with remote Tracking Server, backend and artifact stores
-](https://mlflow.org/docs/latest/tracking.html#scenario-4-mlflow-with-remote-tracking-server-backend-and-artifact-stores).
+](https://mlflow.org/docs/latest/tracking.html#scenario-4-mlflow-with-remote-tracking-server-backend-and-artifact-stores). An overview of the docker containers this repository can set up is below. 
 
 ![overview](images/overview.png)
 

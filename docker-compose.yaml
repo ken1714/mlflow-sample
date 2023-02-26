@@ -41,7 +41,7 @@ services:
     depends_on:
       - database-server
     ports: 
-      - "8080:8080"
+      - 8080:8080
     networks:
       mlflow-net:
         ipv4_address: 172.30.0.4

@@ -19,5 +19,9 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
 COPY --from=builder /lib/x86_64-linux-gnu /lib/x86_64-linux-gnu
 COPY --from=builder /usr/local/bin/gunicorn /usr/local/bin/gunicorn
 
-# Open port 5000
-EXPOSE 5000
+# Set environment variables
+ARG MLFLOW_TRACKING_PORT
+ENV MLFLOW_TRACKING_PORT=${MLFLOW_TRACKING_PORT}
+
+# Open port
+EXPOSE ${MLFLOW_TRACKING_PORT}

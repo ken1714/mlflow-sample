@@ -70,8 +70,8 @@ services:
     restart: always
     environment:
       - PUBLICHOST=localhost
-      - FTP_USER=${FTP_USER}
-      - FTP_PASSWORD=${FTP_PASSWORD}
+      - FTP_USER_NAME=${FTP_USER}
+      - FTP_USER_PASS=${FTP_PASSWORD}
       - FTP_USER_HOME=/home/ftpusers
       - ADDED_FLAGS="--tls=2"
     ports:

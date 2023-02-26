@@ -21,5 +21,3 @@ COPY --from=builder /usr/local/bin/gunicorn /usr/local/bin/gunicorn
 
 # Open port 5000
 EXPOSE 5000
-
-WORKDIR /server

@@ -29,11 +29,11 @@ If you have done that, run the docker containers.
 ```bash
 $ docker-compose up -d
 [+] Running 5/5
- - Container mlflow-training
- - Container mlflow-database
- - Container mlflow-ftp-server
- - Container mlflow-server
- - Container mlflow-adminer
+ - Container mlflow-training    Started
+ - Container mlflow-database    Started
+ - Container mlflow-ftp-server  Started
+ - Container mlflow-server      Started
+ - Container mlflow-adminer     Started
 ```
 
 ## 3. Training

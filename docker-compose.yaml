@@ -1,32 +1,86 @@
 version: '3'
 services:
   mlflow-server:
-    build: .\server\docker
+    build:
+      context: .\server\docker
+      dockerfile: Dockerfile
+      args:
+        - MLFLOW_TRACKING_PORT=${MLFLOW_TRACKING_PORT}
     image: mlflow-server:v0.1
     container_name: mlflow-server
     tty: true
     restart: always
+    depends_on:
+      - database-server
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port ${MLFLOW_TRACKING_PORT}
+      --backend-store-uri mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DB_HOST}:3306/${DB_NAME}
+      --default-artifact-root ftp://${FTP_USER}:${FTP_PASSWORD}@${FTP_IP}:21/
     ports:
-      - 8000:5000
+      - 8000:${MLFLOW_TRACKING_PORT}
     networks:
       mlflow-net:
         ipv4_address: 172.30.0.2
-    volumes:
-      - E:\projects\mlflow-sample\server:/app/mlflow-sample/server
   training-server:
     build: .\model\docker
     image: mlflow-training:v0.1
     container_name: mlflow-training
     tty: true
     restart: always
-    ports:
-      - 9000:5000
     networks:
       mlflow-net:
         ipv4_address: 172.30.0.3
     volumes:
       - E:\projects\mlflow-sample\model:/app/mlflow-sample/model
-      - E:\dataset:/dataset
+  adminer:
+    image: adminer
+    container_name: mlflow-adminer
+    restart: always
+    depends_on:
+      - database-server
+    ports: 
+      - 8080:8080
+    networks:
+      mlflow-net:
+        ipv4_address: 172.30.0.4
+  database-server:
+    image: mysql:5.7
+    container_name: ${DB_HOST}
+    platform: 'linux/amd64'
+    restart: always
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: "Asia/Tokyo"
+    ports:
+      - 3306:3306
+    networks:
+      mlflow-net:
+        ipv4_address: 172.30.0.5
+    volumes:
+      - E:\projects\mlflow-sample\database:/var/lib/mysql
+  ftp-server:
+    image: stilliard/pure-ftpd:latest
+    container_name: mlflow-ftp-server
+    restart: always
+    environment:
+      - PUBLICHOST=localhost
+      - FTP_USER_NAME=${FTP_USER}
+      - FTP_USER_PASS=${FTP_PASSWORD}
+      - FTP_USER_HOME=${FTP_USER_HOME}
+      - ADDED_FLAGS="--tls=2"
+    ports:
+      - 21:21
+      - 30000-30009:30000-30009
+    networks:
+      mlflow-net:
+        ipv4_address: ${FTP_IP}
+    volumes:
+      - E:\projects\mlflow-sample\artifacts:${FTP_USER_HOME}
 networks:
   mlflow-net:
     driver: bridge

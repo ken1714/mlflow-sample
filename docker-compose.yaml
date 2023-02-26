@@ -29,8 +29,6 @@ services:
     container_name: mlflow-training
     tty: true
     restart: always
-    ports:
-      - 9000:5000
     networks:
       mlflow-net:
         ipv4_address: 172.30.0.3

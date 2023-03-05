@@ -3,7 +3,7 @@ FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 # Essentials
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get update
-RUN apt-get install -y python3-pip
+RUN apt-get install -y python3-pip git
 
 # Dependencies
 ADD requirements.txt /tmp

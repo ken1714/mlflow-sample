@@ -33,7 +33,7 @@ services:
       mlflow-net:
         ipv4_address: 172.30.0.3
     volumes:
-      - E:\projects\mlflow-sample\model:/app/mlflow-sample/model
+      - E:\projects\mlflow-sample:/app/mlflow-sample
   adminer:
     image: adminer
     container_name: mlflow-adminer

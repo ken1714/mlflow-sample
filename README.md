@@ -1,21 +1,21 @@
 # mlflow-sample
-## 1. Overview
+## 1. 概要
 
-This repository has been developed in reference to [MLflow Documentation](https://mlflow.org/docs/latest/index.html), especially MLflow tracking, [Scenario 3: MLflow on localhost with Tracking Server
-](https://mlflow.org/docs/latest/tracking.html#scenario-3-mlflow-on-localhost-with-tracking-server) and [Scenario 4: MLflow with remote Tracking Server, backend and artifact stores
-](https://mlflow.org/docs/latest/tracking.html#scenario-4-mlflow-with-remote-tracking-server-backend-and-artifact-stores). An overview of the docker containers this repository can set up is below. 
+本リポジトリは、MLflowでの学習結果の追跡環境一式をDockerコンテナを用いて開発している。開発にあたっては、[MLflowの公式ドキュメント](https://mlflow.org/docs/latest/index.html)、特に[Scenario 3: MLflow on localhost with Tracking Server
+](https://mlflow.org/docs/latest/tracking.html#scenario-3-mlflow-on-localhost-with-tracking-server)と[Scenario 4: MLflow with remote Tracking Server, backend and artifact stores
+](https://mlflow.org/docs/latest/tracking.html#scenario-4-mlflow-with-remote-tracking-server-backend-and-artifact-stores)を参考にしている。本リポジトリで構築している各Dockerコンテナは以下の通り。
 
 ![overview](images/overview.png)
 
-## 2. Setup docker containers
+## 2. Dockerコンテナのセットアップ
 
-Move to [docker](docker) directory, and build docker images.
+以下のコマンドでDockerイメージをビルドする。
 
 ```bash
 $ docker-compose build
 ```
 
-Building docker images will be successfully completed if you can find docker images.
+Dockerイメージのビルドが完了すると、以下のようにDockerイメージが表示される。
 
 ```bash
 $ docker images
@@ -24,7 +24,7 @@ mlflow-training    v0.1      0a7b6e49db01   10 minutes ago   9.99GB
 mlflow-server      v0.1      ac9069a69b58   11 minutes ago   2.33GB
 ```
 
-If you have done that, run the docker containers.
+その後、以下のコマンドでDockerコンテナを起動する。
 
 ```bash
 $ docker-compose up -d
@@ -36,24 +36,23 @@ $ docker-compose up -d
  - Container mlflow-adminer     Started
 ```
 
-## 3. Training
-### 3.1 Split training and test data
+## 3. 学習処理
+### 3.1 学習データとテストデータの分割
 
-Run below command to save training and test data to `--output_dir` as csv files. `--output_dir` and `--random_seed` are options. The directory that has the input csv file will be set as `--output_dir` if you does not set `--output_dir`. There is uniform selection for splitting training and test data, but you can set `--random_seed` to get various splitted results.
-
+本リポジトリでは、機械学習の簡単な例である[Red Wine Quality](https://www.kaggle.com/datasets/uciml/red-wine-quality-cortez-et-al-2009)のデータをElasticNetで学習するスクリプトを用意している。学習に先立ち、以下のコマンドで学習データとテストデータを分割する。第1引数は[Red Wine Quality](https://www.kaggle.com/datasets/uciml/red-wine-quality-cortez-et-al-2009)のデータのcsvファイルへのパスを渡す。`--output_dir`と`--random_seed`はオプション引数で、それぞれ出力先ディレクトリと、学習データとテストデータを分ける際のランダムシードの値を指定する。
 
 ```bash
 python3 split_train_test.py data/winequality-red.csv --output_dir output --random_seed 40
 ```
 
-### 3.2 Run training
+### 3.2 学習の実行
 
-Run below command. `--alpha` (default: 0.5), `--l1_ratio` (default: 0.5) and `--experiment_name` are options. `--experiment_name` is display name for mlflow tracking.
+以下のコマンドを実行する。第1引数、第2引数はそれぞれ学習データのcsvファイル、テストデータのcsvファイルへのパスを渡す。`--alpha`(デフォルト: 0.5)、`--l1_ratio`(デフォルト: 0.5)及び `--experiment_name`はオプション引数である。`--experiment_name`はMLflowで学習結果を閲覧するときの表示名である。
 
 ```bash
 $ python3 train.py train.csv test.csv --experiment_name experiment_sample --alpha 0.5 --l1_ratio 0.5
 ```
 
-## 4. View trained results
+## 4. 学習結果の閲覧
 
-Access to http://localhost:8000/ from your host machine.
+ホストPCから<http://localhost:8000/>にアクセスることで、学習結果を閲覧できる。

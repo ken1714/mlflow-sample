@@ -9,7 +9,7 @@
 
 ## 2. Dockerコンテナのセットアップ
 
-[docker](docker)ディレクトリに移動した後、以下のコマンドでDockerイメージをビルドする。
+以下のコマンドでDockerイメージをビルドする。
 
 ```bash
 $ docker-compose build

@@ -9,7 +9,7 @@ This repository has been developed in reference to [MLflow Documentation](https:
 
 ## 2. Setup docker containers
 
-Move to [docker](docker) directory, and build docker images.
+Build docker images.
 
 ```bash
 $ docker-compose build
